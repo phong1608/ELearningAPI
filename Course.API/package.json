@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
-    "start": "ts-node-dev server.ts"
+    "start": "ts-node-dev src/app.ts"
   },
   "keywords": [],
   "author": "",
@@ -17,9 +17,15 @@
     "typescript": "^5.5.4"
   },
   "devDependencies": {
+    "@types/amqplib": "^0.10.5",
+    "@types/compression": "^1.7.5",
     "@types/dotenv": "^6.1.1",
-    "@types/jsonwebtoken": "^9.0.6",
+    "@types/jsonwebtoken": "^9.0.7",
+    "amqplib": "^0.10.4",
+    "compression": "^1.7.4",
     "dotenv": "^16.4.5",
-    "jsonwebtoken": "^9.0.2"
+    "helmet": "^7.1.0",
+    "jsonwebtoken": "^9.0.2",
+    "slugify": "^1.6.6"
   }
 }

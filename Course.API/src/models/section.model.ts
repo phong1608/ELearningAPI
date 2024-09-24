@@ -6,7 +6,7 @@ const DOCUMENT_COLLECTION:string = "Sections"
 
 const sectionSChema:Schema = new Schema({
     title:{type:String,require:true},
-    course_id:{type:Types.ObjectId,ref:"Course",require:true},
+    course:{type:Types.ObjectId,ref:"Course",require:true},
     order:{type:Number,require:true,unique:true},
     lessons:[{type:Types.ObjectId,ref:"Lesson"}]
 

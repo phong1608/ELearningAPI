@@ -22,7 +22,7 @@ class AuthService{
         if(!match)
             return {message:"Password is incorrect"}
         const userId=user._id
-        const tokens= await createTokenPair(userId.toString())
+        const tokens= await createTokenPair(userId.toString(),user.lastName)
         
         return{
             userId,
@@ -43,7 +43,7 @@ class AuthService{
             const id:string = newUser.id
             
 
-            const accessToken = await createTokenPair(newUser.id)
+            const accessToken = await createTokenPair(newUser.id,newUser.lastName)
             return {
                 code:201,
                 metadata:{

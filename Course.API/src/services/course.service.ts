@@ -1,8 +1,8 @@
 import { Types } from "mongoose";
 import courseModel from "../models/course.model";
 import { Course } from "../types/course.type";
-
-
+import { publishDirectMessage } from "../queue/producer";
+import { CourseChannel } from "../server";
 class CourseService{
     static async AddCourse(course:Course,instructor_id:Types.ObjectId){
         course.instructor_id=instructor_id
@@ -17,14 +17,14 @@ class CourseService{
         .lean()
         .exec()
     }
-    static async GetCourseById(id:string):Promise<Course>{
-        const course = await courseModel.findById(id)
+    static async GetCourseByName(title_slug:string):Promise<Course>{
+        const course = await courseModel.findOne({title_slug:title_slug})
         .populate({
             path: 'sections',
             select: 'title _id order lessons',
             populate: {
               path: 'lessons',
-              select: 'title duration' 
+              select: 'title duration _id' 
             }
           })
         .lean()
@@ -48,6 +48,15 @@ class CourseService{
         if(!updateCourse)
             throw new Error("Course not found")
         return updateCourse
+    }
+    
+    static async AddToCart(user_id:string,course_id:string)
+    {
+        const course = await courseModel.findById(course_id).select("_id title price instructor_id category")
+        const message =JSON.stringify({user:user_id,course:course})
+        const exchangeName="cart-exchange"
+        const routingKey="add-to-cart"
+        await publishDirectMessage(CourseChannel,exchangeName,routingKey,message)
     }
     
 }

@@ -8,7 +8,7 @@ const lessonModel = new Schema({
     title:{type:String,require:true},
     video_url:{type:String,require:true},
     duration:{type:String,require:true},
-    section_id:{type:Types.ObjectId,require:true,ref:"Section"},
+    section:{type:Types.ObjectId,require:true,ref:"Section"},
     order:{type:Number,require:true,unique:true},
     isPreview:{type:Boolean,default:false}
 

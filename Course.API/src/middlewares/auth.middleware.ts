@@ -18,5 +18,11 @@ class AuthMiddleware{
         req.user=decoder
         return next()
     }
+    // public async verifyUserAccess(req: Request,res:Response,next:NextFunction)
+    // {
+
+
+    //     return next()
+    // }
 }
 export default new AuthMiddleware()

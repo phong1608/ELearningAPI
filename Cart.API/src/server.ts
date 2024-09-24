@@ -4,13 +4,19 @@ import helmet from "helmet"
 import { config } from "../config";
 import database from "./dbs/mongodb.init";
 import cartRouter from "./routes/index"
-export class CartServer{
+import { Channel } from "amqplib";
+import createConnection from "./queue/rabbitmq.connection";
+import { consumeAddToCartMessage } from "./queue/consumer";
+
+let CartChannel:Channel
+class CartServer{
     private app:Application
     constructor(app:Application){
         this.app = app;
     }
     public start(){
         this.databaseConnection
+        this.startQueue()
         this.standartMiddleware(this.app)
         this.routesMiddelware(this.app)
         this.startServer(this.app)
@@ -18,6 +24,11 @@ export class CartServer{
     private databaseConnection():void
     {
         database.connect()
+    }
+    private async startQueue()
+    {
+        CartChannel = await createConnection()
+        await consumeAddToCartMessage(CartChannel)
     }
     private standartMiddleware(app:Application){
         app.use(helmet())
@@ -36,3 +47,4 @@ export class CartServer{
         })
     }
 }
+export {CartChannel,CartServer}

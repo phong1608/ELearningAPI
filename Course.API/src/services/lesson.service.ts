@@ -20,7 +20,7 @@ class LessonService{
     }
     static async GetLessonById(id:string):Promise<Lesson>
     {
-        const lesson= await lessonModel.findById(id)
+        const lesson= await lessonModel.findById(id).populate('section.course')
         if(!lesson)
             throw new Error("Lesson not found")
         return lesson
