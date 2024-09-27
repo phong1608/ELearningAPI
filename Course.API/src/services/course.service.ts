@@ -54,10 +54,11 @@ class CourseService{
     {
         const course = await courseModel.findById(course_id).select("_id title price instructor_id category")
         const message =JSON.stringify({user:user_id,course:course})
-        const exchangeName="cart-exchange"
-        const routingKey="add-to-cart"
+        const exchangeName ="review-exchange"
+        const routingKey="new-review"
         await publishDirectMessage(CourseChannel,exchangeName,routingKey,message)
     }
+    
     
 }
 

@@ -2,8 +2,8 @@ import jwt from "jsonwebtoken"
 
 
 import { Request,Response,NextFunction } from "express"
-import { config } from "../../config"
-import { IAuthPayload } from "@order/interfaces/auth.interface"
+import { config } from "../config"
+import { IAuthPayload } from "../interfaces/auth.interface"
 
 
 class AuthMiddlware{

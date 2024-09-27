@@ -1,7 +1,7 @@
 import {Request,Response,NextFunction} from 'express';
 import jwt from "jsonwebtoken"
 import { IAuthPayload } from '../interfaces/auth.interface';
-import { config } from "../../config";
+import { config } from "../config";
 
 class AuthMiddleware{
     public async verifyUser(req: Request,res:Response ,next:NextFunction)

@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import { config } from '../../config';
+import { config } from '../config';
 
 const connectionString = config.MONGODB_URL||"mongodb://localhost:27017/cart";
 

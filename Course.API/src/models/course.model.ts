@@ -9,6 +9,7 @@ const DOCUMENT_NAME ="Course"
 const courseModel = new Schema({
     title:{type:String, require:true},
     title_slug:{type:String},
+    image:{type:String, require:true},
     description:{type:String, require:true},
     category:{type:Array, require:true},
     instructor_id:{type:Types.ObjectId, require:true},

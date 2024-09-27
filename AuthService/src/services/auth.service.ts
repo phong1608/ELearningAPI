@@ -2,13 +2,9 @@ import userModel from "../models/user.model";
 
 import bcrypt from "bcrypt"
 import findByEmail from "./user.service";
-import Login from "../types/login.type";
-import Register from "../types/register.type";
+import Login from "../interfaces/login.type";
+import Register from "../interfaces/register.type";
 import createTokenPair  from "../utils/authUtils";
-const role={
-    LEARNER:"LEARNER",
-    INSTRUCTOR:"INSTRUCTOR"
-}
 
 
 
@@ -40,9 +36,6 @@ class AuthService{
         if(newUser)
         {
             
-            const id:string = newUser.id
-            
-
             const accessToken = await createTokenPair(newUser.id,newUser.lastName)
             return {
                 code:201,

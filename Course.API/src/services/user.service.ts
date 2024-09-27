@@ -4,7 +4,7 @@ import userModel from "../models/user.model";
 
 
 class UserService{
-    static async AddUserCourrse({user,course}:User):Promise<User>
+    static async AddUserCourse({user,course}:User):Promise<User>
     {
         return await userModel.findOneAndUpdate({user:user},{$push:{course:course}},{upsert:true,new:true})
     }
@@ -16,6 +16,21 @@ class UserService{
             return false
         }
         return userCourse.course.includes(course)
+    }
+    static async GetUserCourse(user_id:Types.ObjectId)
+    {
+        await userModel.findOne({user:user_id}).populate({
+            path:"courses",
+            select:"title image user_review"
+        })
+    }
+    static async AddUserRating(user:string,course_id:string,rating:number)
+    {
+        return await userModel.findOneAndUpdate(
+            { _id: user, "courses.courseId": course_id },
+            { $set: { "courses.$.rating": rating } },
+            { new: false } 
+          );
     }
 }
 

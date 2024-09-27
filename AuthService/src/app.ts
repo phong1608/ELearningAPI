@@ -1,12 +1,13 @@
+import { AuthServer } from "./server";
 import express from "express"
-import router from "./routes"
-import instanceMongoDb from "./dbs/mongodb.init"
-const app = express()
-
-
-app.use(express.json())
-app.use(express.urlencoded({ extended: true }))
-instanceMongoDb
-app.use("/api/v1",router)
-
-export default app
+class Application{
+    
+    public initialize()
+    {
+        const app = express()
+        const server = new AuthServer(app)
+        server.start()
+    }
+}
+const app = new Application()
+app.initialize()

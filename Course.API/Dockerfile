@@ -1,12 +1,12 @@
-FROM node:alpine
-
+FROM node:20-alpine3.18
 
 WORKDIR /app
+COPY package.json ./
+COPY tsconfig.json ./
+COPY src ./src
+RUN ls -a
+RUN npm install 
 
-COPY package.json .
+EXPOSE 4001
 
-RUN npm install
-
-COPY . .
-
-CMD ["npm","start"]
+CMD [ "npm", "run", "dev" ]

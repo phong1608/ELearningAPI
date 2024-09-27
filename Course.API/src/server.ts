@@ -3,7 +3,7 @@ import createConnection from './queue/rabbitmq.connection';
 import compression from "compression"
 import helmet from "helmet"
 import express, { Application } from "express"
-import {config} from "../config"
+import {config} from "./config"
 import instanceMongoDb from './dbs/mongodb.init'
 import courseRoute from "./routes/index"
 import { consumeAddUserCourseMessage } from './queue/consumer';

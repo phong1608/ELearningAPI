@@ -1,15 +1,15 @@
-import { NextFunction,Request,Response } from "express";
+import { Request,Response } from "express";
 import AuthService from "../services/auth.service";
 
 
 class AuthController{
-    signIn = async(req: Request, res: Response,next:NextFunction)=>{
+    signIn = async(req: Request, res: Response)=>{
         return res.json({
             message:"SignIn Successfully ",
             metadata:await AuthService.signIn(req.body)
         })
     }
-    register = async(req: Request, res: Response,next:NextFunction)=>{
+    register = async(req: Request, res: Response)=>{
         return res.json({
             message:"Register Successfully ",
             metadata:await AuthService.register(req.body)

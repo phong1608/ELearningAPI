@@ -6,7 +6,10 @@ const DOCUMENT_NAME ="User"
 
 const userModel = new Schema({
     user:{type:Types.ObjectId,required:true},
-    courses:{type:Array<Types.ObjectId>,ref:"courses",required:true}
+    courses: [{
+        courseId: { type: Types.ObjectId, ref: "courses", required: true },
+        rating: { type: Number, default: 0 }
+      }]
 },{
     timestamps:true,
     collection:DOCUMENT_COLLECTION

@@ -1,5 +1,5 @@
 import amqplib ,{Channel,Connection} from "amqplib"
-import { config } from "../../config"
+import { config } from "../config"
 
 
 

@@ -1,4 +1,4 @@
-import {Schema ,Types, model} from "mongoose"
+import {Schema , model} from "mongoose"
 
 const DOCUMENT_NAME="User"
 const DOCUMENT_COLLECTION="Users"

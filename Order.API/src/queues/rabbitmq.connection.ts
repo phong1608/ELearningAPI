@@ -1,5 +1,5 @@
 import amqplib, { Channel, Connection }  from 'amqplib';
-import { config } from "../../config";
+import { config } from "../config";
 
 const connection_string = config.RABBITMQ_URL||"amqp://127.0.0.1:15672"
 

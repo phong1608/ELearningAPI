@@ -1,7 +1,7 @@
 import compression from 'compression';
 import helmet  from 'helmet';
 import express,{Application} from 'express'
-import { config } from '../config';
+import { config } from './config';
 import orderRouter from '../src/routes/index'
 import database from './dbs/mongodb.init';
 import { Channel } from 'amqplib';

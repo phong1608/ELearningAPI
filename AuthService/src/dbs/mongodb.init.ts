@@ -1,15 +1,14 @@
 import mongoose from 'mongoose';
-import { config } from '../../config';
+import { config } from '../config';
 
-const connectionString = config.MONGODB_URL||"mongodb://localhost:27017/user";
+const connectionString = config.MONGODB_URL||"mongodb://localhost:27017/cart";
 
 class Database {
-  static instance: Database;
   constructor() {
     this.connect();
   }
 
-  connect(type: 'mongodb' = 'mongodb') {
+  public connect() {
     if (1 === 1) {
       mongoose.set('debug', true);
       mongoose.set('debug', { color: true });
@@ -18,18 +17,12 @@ class Database {
     mongoose
       .connect(connectionString)
       .then(() => console.log('Connected to MongoDB  Success'))
-      .catch((err) => console.log('Error Connect!'));
+      .catch((err) => console.log('Error Connect!',err));
   }
 
-  static getInstance() {
-    if (!Database.instance) {
-      Database.instance = new Database();
-    }
-    return Database.instance;
-  }
+ 
 }
 
-const instanceMongoDb   
- = Database.getInstance();
+const database = new Database()
 
-export default instanceMongoDb;   
+export default database;   
