@@ -12,7 +12,6 @@ services:
   messagebroker:
     image: rabbitmq:management
     container_name: messagebroker
-    hostname: course-mq
     environment:
       - RABBITMQ_DEFAULT_USER=guest
       - RABBITMQ_DEFAULT_PASS=guest
@@ -49,8 +48,12 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongodb_container:27017/course
       - JWT_SECRET_KEY="6f1b869691544d8a8c73a79006fc71e8"
-      - RABBITMQ_URL=amqp://course-mq:5672
+      - RABBITMQ_URL=amqp://messagebroker:5672
       - PORT=4001
+    depends_on:
+      - messagebroker
+
+
   cart:
     container_name: cart_container
     build:
@@ -63,8 +66,10 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongodb_container:27017/cart
       - JWT_SECRET_KEY="6f1b869691544d8a8c73a79006fc71e8"
-      - RABBITMQ_URL=amqp://course-mq:5672
+      - RABBITMQ_URL=amqp://messagebroker:5672
       - PORT=4002
+    depends_on:
+      - messagebroker
   
   order:
     container_name: order_container
@@ -78,8 +83,11 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongodb_container:27017/order
       - JWT_SECRET_KEY="6f1b869691544d8a8c73a79006fc71e8"
-      - RABBITMQ_URL=amqp://course-mq:5672
+      - RABBITMQ_URL=amqp://messagebroker:5672
       - PORT=4003
+    depends_on:
+      - messagebroker
+
 
 
   review:
@@ -94,5 +102,23 @@ services:
     environment:
       - MONGODB_URL=mongodb://mongodb_container:27017/order
       - JWT_SECRET_KEY="6f1b869691544d8a8c73a79006fc71e8"
-      - RABBITMQ_URL=amqp://course-mq:5672
+      - RABBITMQ_URL=amqp://messagebroker:5672
       - PORT=4004
+    depends_on:
+      - messagebroker
+  
+  yarpapigateway:
+    container_name: yarpapigateway
+    build:
+      context: ../GatewayService
+      dockerfile: Dockerfile
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      - ASPNETCORE_HTTP_PORTS=8080
+      - ASPNETCORE_URLS=http://+:8080
+    ports:
+      - 6000:8080
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+    
