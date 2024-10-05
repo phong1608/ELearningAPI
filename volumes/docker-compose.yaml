@@ -19,6 +19,33 @@ services:
     ports:
       - "5672:5672"
       - "15672:15672"
+  discountdb:
+    container_name: disocuntdb_container
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=DiscountDb
+    ports:
+      - "5432:5432"
+      
+    volumes:
+      - postgres_discount:/var/lib/postgressql/data/
+  coursedb:
+    container_name: coursedb_container
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=CourseDb
+    ports:
+      - "5433:5432"
+      
+    volumes:
+      - postgres_course:/var/lib/postgressql/data/
+
   auth:
     container_name: auth_container
     build:
@@ -46,12 +73,17 @@ services:
       - 4001:4001
     env_file: ../Course.API/.env
     environment:
-      - MONGODB_URL=mongodb://mongodb_container:27017/course
       - JWT_SECRET_KEY="6f1b869691544d8a8c73a79006fc71e8"
       - RABBITMQ_URL=amqp://messagebroker:5672
       - PORT=4001
+      - DATABASE_HOST=coursedb
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=CourseDb
     depends_on:
       - messagebroker
+      - coursedb
+    
 
 
   cart:
@@ -106,6 +138,28 @@ services:
       - PORT=4004
     depends_on:
       - messagebroker
+
+  discount:
+    container_name: discount_container
+    build:
+      context: ../Discount.API
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 4005:4005
+    env_file: ../Discount.API/.env
+    environment:
+      - JWT_SECRET_KEY="6f1b869691544d8a8c73a79006fc71e8"
+      - RABBITMQ_URL=amqp://messagebroker:5672
+      - PORT=4005
+      - DATABASE_HOST=discountdb
+      - DATABASE_USER=postgres
+      - DATABASE_PASSWORD=postgres
+      - DATABASE_NAME=DiscountDb
+    depends_on:
+      - messagebroker
+      - discountdb
+    
   
   yarpapigateway:
     container_name: yarpapigateway
@@ -122,3 +176,6 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
     
+volumes:
+  postgres_course:
+  postgres_discount:

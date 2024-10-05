@@ -14,8 +14,9 @@ class OrderService
         const exchangeName="usercourse-exchange"
         const routingKey="usercourse"
         
-        const message:UserCourse = {user:newOrder.user,courses:newOrder.course.map(c=>{courseId:c?._id})} as UserCourse
+        const message:UserCourse = {user:newOrder.user,courses:newOrder.course.map(c=>c.id)} as UserCourse
         await publishDirectMessage(orderChannel,exchangeName,routingKey,JSON.stringify(message))
+        console.log(message)
         return newOrder
     }
 }

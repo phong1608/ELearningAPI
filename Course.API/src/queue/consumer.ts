@@ -1,7 +1,7 @@
 import { Channel,Replies,ConsumeMessage } from "amqplib";
-
-import createConnection from "./rabbitmq.connection";
 import UserService from "../services/user.service";
+import createConnection from "./rabbitmq.connection";
+import User from "../interfaces/user.interface";
 
 
 const consumeAddUserCourseMessage = async(channel:Channel)=>
@@ -18,7 +18,9 @@ const consumeAddUserCourseMessage = async(channel:Channel)=>
         await channel.bindQueue(orderQueue.queue, exchangeName, routingKey);
         channel.consume(orderQueue.queue, async (msg: ConsumeMessage | null) => {
             const message = JSON.parse(msg!.content.toString());
-            await UserService.AddUserCourse(message)
+            message.courses.map(async(c:string)=>await UserService.AddUserCourse({user:message.user,
+                course:c}as User))
+
         },{
             noAck:true
         });
@@ -27,8 +29,7 @@ const consumeAddUserCourseMessage = async(channel:Channel)=>
 }
 
 const consumeAddUserRatingMessage = async(channel:Channel)=>
-    {
-        
+    {        
         if (!channel) {
             channel = (await createConnection()) as Channel;
         }
@@ -40,7 +41,7 @@ const consumeAddUserRatingMessage = async(channel:Channel)=>
         await channel.bindQueue(orderQueue.queue, exchangeName, routingKey);
         channel.consume(orderQueue.queue, async (msg: ConsumeMessage | null) => {
             const message = JSON.parse(msg!.content.toString());
-            await UserService.AddUserCourse(message)
+            await UserService.AddUserRating(message.user.toString(),message.rating,message.course_id)
         },{
             noAck:true
         });

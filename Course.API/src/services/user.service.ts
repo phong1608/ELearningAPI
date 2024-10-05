@@ -1,37 +1,17 @@
-import { Types } from "mongoose";
+import { AddUserCourse,getAllUserCourse,addUserRating } from "../repository/user.repository";
 import User from "../interfaces/user.interface";
-import userModel from "../models/user.model";
 
 
 class UserService{
-    static async AddUserCourse({user,course}:User):Promise<User>
+    static async AddUserCourse(user:User)
     {
-        return await userModel.findOneAndUpdate({user:user},{$push:{course:course}},{upsert:true,new:true})
+        return await AddUserCourse(user);
     }
-    static async CheckUserEnrollment(user:Types.ObjectId,course:Types.ObjectId):Promise<boolean> 
-    {
-        const userCourse = await userModel.findOne({user:user})
-        if(!userCourse)
-        {
-            return false
-        }
-        return userCourse.course.includes(course)
+    static async GetAllUserCourse(user_id:string){
+        return await getAllUserCourse(user_id)
     }
-    static async GetUserCourse(user_id:Types.ObjectId)
-    {
-        await userModel.findOne({user:user_id}).populate({
-            path:"courses",
-            select:"title image user_review"
-        })
-    }
-    static async AddUserRating(user:string,course_id:string,rating:number)
-    {
-        return await userModel.findOneAndUpdate(
-            { _id: user, "courses.courseId": course_id },
-            { $set: { "courses.$.rating": rating } },
-            { new: false } 
-          );
+    static async AddUserRating(user_id:string,rating:number,course_id:string){
+        return await addUserRating(rating,user_id,course_id)
     }
 }
-
 export default UserService

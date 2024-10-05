@@ -6,7 +6,7 @@ const DOCUMENT_NAME="Review"
 const reviewModel = new Schema({
     reviewer_id:{type:Types.ObjectId,required:true},
     reviewer_name:{type:String,required:true},
-    course_id:{type:Types.ObjectId,required:true},
+    course_id:{type:String,required:true},
     rating:{type:Number,required:true},
     review:{type:String,require:true}
 

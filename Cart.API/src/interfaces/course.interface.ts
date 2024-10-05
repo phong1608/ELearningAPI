@@ -1,11 +1,11 @@
-import { Types } from "mongoose";
 
 export interface Course{
-    _id:Types.ObjectId,
+    id:string,
     title:String,
     category:String[],
     instructor_id:String,
+    instructor_name:string
     price:number,
-    coupon:string
+
     
 }

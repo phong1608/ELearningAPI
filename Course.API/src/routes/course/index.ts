@@ -10,4 +10,6 @@ router.post('/course/publish/:id',CourseController.PublishCourse)
 router.post('/add-to-cart/:id',authMiddleware.verifyUser,CourseController.addToCart)
 router.get('/course',CourseController.GetPublishedCourse)
 router.get('/course/:title',CourseController.GetCourseById)
+router.put('/course/:id',CourseController.UpdateCourseById)
+
 export default router 

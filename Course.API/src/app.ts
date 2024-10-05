@@ -1,5 +1,5 @@
 import { CourseServer } from "./server";
-
+import { databaseConnection } from "./dbs/postgres.init";
 import express from "express";
 
 class Application
@@ -8,6 +8,7 @@ class Application
     {
         const app = express()
         const server = new CourseServer(app)
+        databaseConnection()
         server.start()
     }
 }

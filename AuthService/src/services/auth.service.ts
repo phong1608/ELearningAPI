@@ -19,7 +19,7 @@ class AuthService{
             return {message:"Password is incorrect"}
         const userId=user._id
         const tokens= await createTokenPair(userId.toString(),user.lastName)
-        
+        console.log(user)
         return{
             userId,
             tokens

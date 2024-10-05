@@ -1,12 +1,14 @@
 import compression from 'compression';
 import helmet  from 'helmet';
-import express,{Application} from 'express'
+import express,{Application,Request,Response,NextFunction} from 'express'
 import { config } from './config';
 import orderRouter from '../src/routes/index'
 import database from './dbs/mongodb.init';
 import { Channel } from 'amqplib';
 import createConnection from './queues/rabbitmq.connection';
 import { consumeCheckoutMessage } from './queues/consumer';
+import { IErrorResponse,CustomError } from './helpers/error-reponse';
+
 
 
 let orderChannel:Channel
@@ -46,7 +48,16 @@ export class OrderServer{
         app.use(compression())
 
     }
-
+    public errorHandler(app: Application): void {
+        
+        app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
+          if (error instanceof CustomError) {
+            console.log('error')
+            res.status(error.statusCode).json(error.serializeErrors());
+          }
+          next();
+        });
+      }
     public routesMiddleware(app:Application)
     {
         app.use("",orderRouter)

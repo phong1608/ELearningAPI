@@ -2,7 +2,7 @@ import {Types} from "mongoose"
 
 export default interface Course{
 
-    _id:Types.ObjectId,
+    id:string,
     price:number,
     coupon:string,
     title:string,

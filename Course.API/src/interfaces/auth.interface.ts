@@ -10,5 +10,5 @@ declare global {
   
   export interface IAuthPayload {
     userId: Types.ObjectId;
-
+    name:string
   }

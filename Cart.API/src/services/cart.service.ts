@@ -7,16 +7,16 @@ import {CartChannel} from "../server"
 class CartService{
 
 
-    static async addToCart(user_id:string,{_id,price,coupon="",title,category,instructor_id}:Course)
+    static async addToCart(user_id:string,{id,price,instructor_name,title,category,instructor_id}:Course)
     {
         const userCart = await cartModel.findOne({user:user_id})
 
-        if(userCart?.courses.some(c=>c._id==_id))
+        if(userCart?.courses.some(c=>c.id==id))
         {
             throw new Error("This course is already in cart")
         }
         
-        const updatedCart = await cartModel.findOneAndUpdate({user:user_id}, {$push:{courses:{_id,price,coupon,title,category,instructor_id}}},{upsert:true,new:true})
+        const updatedCart = await cartModel.findOneAndUpdate({user:user_id}, {$push:{courses:{id,price,instructor_name,title,category,instructor_id}}},{upsert:true,new:true})
         const totalPrice = updatedCart.courses.reduce((total, course) => total + course.price, 0);
 
         updatedCart.price = totalPrice;
@@ -30,7 +30,7 @@ class CartService{
         {
             throw new Error("User's Cart is empty")
         }
-        if(!userCart?.courses.some(c=>c._id?.toString()==course_id))
+        if(!userCart?.courses.some(c=>c.id?.toString()==course_id))
         {
             throw new Error("This course is not in cart")
         }

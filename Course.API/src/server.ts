@@ -2,11 +2,12 @@ import { Channel } from 'amqplib';
 import createConnection from './queue/rabbitmq.connection';
 import compression from "compression"
 import helmet from "helmet"
-import express, { Application } from "express"
 import {config} from "./config"
-import instanceMongoDb from './dbs/mongodb.init'
 import courseRoute from "./routes/index"
-import { consumeAddUserCourseMessage } from './queue/consumer';
+import { consumeAddUserCourseMessage, consumeAddUserRatingMessage } from './queue/consumer';
+import express,{ Application,Request,Response,NextFunction } from "express";
+import { IErrorResponse,CustomError } from "./helpers/error-reponse";
+
 let CourseChannel:Channel
 const PORT = config.PORT||"3001"
 class CourseServer{
@@ -18,22 +19,20 @@ class CourseServer{
 
     public start():void
     {
-        this.databaseConnection
         this.startQueue()
         this.standardMiddleware(this.app)
         this.standardMiddleware(this.app)
         this.routesMiddleware(this.app)
+        this.errorHandler(this.app)
         this.startServer(this.app)
     }
-    public databaseConnection():void
-    {
-        instanceMongoDb
-    }
+   
     
     public async startQueue()
     {
         CourseChannel=await createConnection()
         await consumeAddUserCourseMessage(CourseChannel)
+        await consumeAddUserRatingMessage(CourseChannel)
     }
     public standardMiddleware(app:Application)
     {
@@ -43,11 +42,21 @@ class CourseServer{
         app.use(compression())
 
     }
-
+    
     public routesMiddleware(app:Application)
     {
-        app.use("",courseRoute)
+        app.use("",courseRoute)   
     }
+    public errorHandler(app: Application): void {
+        
+        app.use((error: IErrorResponse, _req: Request, res: Response, next: NextFunction) => {
+          if (error instanceof CustomError) {
+            console.log('error')
+            res.status(error.statusCode).json(error.serializeErrors());
+          }
+          next();
+        });
+      }
     public startServer(app:Application)
     {
         app.listen(PORT,()=>{
